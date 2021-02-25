@@ -26,7 +26,7 @@ sudo chown -R $USER:$USER /var/www/engsoftua.com/sua-folder-app
 sudo chmod -R 755 /var/www/engsoftua.com/sua-folder-app
 
 #Configurar modulos e servidor web
-Para que o Nginx exiba este conteúdo, é necessário criar um bloco de servidor com as diretivas corretas. Em vez de modificar o arquivo de configuração padrão diretamente, vamos fazer um novo em /etc/nginx/sites-available/example.com:
+Para que o Nginx exiba este conteúdo, é necessário criar um bloco de servidor com as diretivas corretas. Em vez de modificar o arquivo de configuração padrão diretamente, vamos fazer um novo em /etc/nginx/sites-available/engsoftua.com:
 
 sudo vim /etc/nginx/sites-available/engsoftua.com
 
@@ -34,7 +34,7 @@ server {
         listen 80;
         listen [::]:80;
         root /var/www/engsoftua.com/app;
-        index index.html index.html;
+        index index.html;
         server_name engsoftua.com www.engsoftua;
 
         #Proxy reverso config
