@@ -1,3 +1,3 @@
 # uacontents
 
-Steps to configure and delivery first work UA course.
+Conteúdos de apoio UA.
