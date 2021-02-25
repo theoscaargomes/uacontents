@@ -1,0 +1,57 @@
+
+
+
+#Instalar web server
+sudo apt update
+sudo apt install nginx
+systemctl status nginx.service 
+Abrir navegador e conferir se a VM está servindo http por meio do IP da VM > http://IP-DA-VM/
+
+#Liberar no FW da VM
+sudo ufw allow 'Nginx HTTP'
+sudo ufw status
+
+# Inserir na inicialização do host visitante o servidor web
+sudo systemctl enable nginx
+
+#Mover app do ambiente de desenvolvimento para servidor
+scp -r sua-pasta-app user-da-vm@ip-da-vm:/tmp
+dentro da VM, mover a pasta de /tmp para /var/www/engsoftua.com/app>> 'sudo vm /tmp/sua-pasta-app /var/www/engsoftua.com/'
+
+# Configurar APP e arrumar permissão
+Ao usar o servidor Web Nginx, os server blocks (similares aos hosts virtuais no Apache) podem ser usados para encapsular detalhes de configuração e hospedar mais de um domínio de um único servidor. Vamos configurar um domínio chamado your_domain, mas você deve substituí-lo por seu próprio nome de domínio. 
+
+sudo mkdir -p /var/www/engsoftua.com/sua-folder-app
+sudo chown -R $USER:$USER /var/www/engsoftua.com/sua-folder-app
+sudo chmod -R 755 /var/www/engsoftua.com/sua-folder-app
+
+#Configurar modulos e servidor web
+Para que o Nginx exiba este conteúdo, é necessário criar um bloco de servidor com as diretivas corretas. Em vez de modificar o arquivo de configuração padrão diretamente, vamos fazer um novo em /etc/nginx/sites-available/example.com:
+
+sudo vim /etc/nginx/sites-available/engsoftua.com
+
+server {
+        listen 80;
+        listen [::]:80;
+        root /var/www/engsoftua.com/app;
+        index index.html index.html;
+        server_name engsoftua.com www.engsoftua;
+
+        #Proxy reverso config
+        location /test {
+        proxy_pass http://127.0.0.1/contact.html;
+}
+
+}
+
+Em seguida, vamos habilitar o arquivo criando um link dele para o diretório sites-enabled, de onde o Nginx lê durante a inicialização:
+
+sudo ln -s /etc/nginx/sites-available/engsoftua.com /etc/nginx/sites-enabled/
+sudo systemctl restart nginx
+
+Abrir no navegador >> http://IP-DA-VM/
+Abrir no navegador >> http://IP-DA-VM/test  << validar proxy reverso no /test
+
+
+
+
